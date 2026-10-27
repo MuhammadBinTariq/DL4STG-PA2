@@ -1,0 +1,17 @@
+# Local notebook/runtime files
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+.env
+.env.*
+
+# Datasets, training checkpoints, and prediction caches stay in Drive.
+data/
+training_runs/
+checkpoints/
+*.pt
+*.pth
+*.npy
+*.npz
