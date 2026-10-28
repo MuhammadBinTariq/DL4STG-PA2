@@ -52,7 +52,9 @@ The exact Q2.11 prediction was committed before B-D training in `2e5b8f5866a2de7
 
 In the current runtime, run sections **37-40**, review the checks in **39**, then run **41-43** for all six training runs and **44-46** for Table 5. Each model/seed uses fresh initialization, exactly 30 epochs, Adam at 1e-3 and batch size 32. Saved epoch-boundary checkpoints resume completed work; a partial epoch is repeated.
 
-In a fresh runtime, restore sections **1-4, 6-7, 14-16, 20, 24, 28-29**, then run **37-46**. Earlier training and stress-test experiments do not need rerunning. Keep the baseline A100 runtime when practical so the hardware is comparable.
+In a fresh runtime, restore sections **1-4, 6-7, 14-15, 24, 28-29**, then run **37-46**. Section 40 defines the shared masked loss and checkpoint/RNG helpers directly, and training reports missing setup sections before taking any optimizer steps. Earlier training and stress-test experiments do not need rerunning. Keep the baseline A100 runtime when practical so the hardware is comparable.
+
+If an older copy of section 41 reports `capture_random_states` as undefined, run section 20 and retry section 41. If `masked_video_mse` is undefined, run section 16 as well. Successfully saved epochs resume automatically; an epoch that failed before checkpoint saving is repeated.
 
 Table 5 evaluates A-D on the same 1,000 test videos at start 1, using both seeds. It includes original and transformed errors, consistency gaps, short-horizon errors at all three speeds, parameter counts, mean epoch training times and inference time for 1,000 original videos. A is evaluated again to measure inference time on the same hardware; its weights are unchanged. Matching partial evaluation results resume from a progress file.
 
