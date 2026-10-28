@@ -1,0 +1,3 @@
+Final model: symmetrised D, seed 0, 1x. C_R=5.52e-17; E_R=0.0338.
+Rows: X|f_bar(X); T(X)|T(Y); T(X)|f_bar(T(X)); T(X)|T(f_bar(X)).
+Same baseline Figure 3 case. GIF: outputs/gifs/figure6a3_R_video9497.gif

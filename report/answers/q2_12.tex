@@ -1,0 +1,5 @@
+Model D keeps the baseline's gate equations and nine-step rollout, but changes the second layer to a $3\times3$ convolution with dilation 2 and padding 2. Its sampled offsets are $-2,0,2$ rather than $-1,0,1$, while the folded grid remains $16\times16$.
+
+Paths from the current input or previous layer-1 hidden state traverse both convolutions, giving $(1+2)\times4=12$ pixels per axis. The previous layer-2 hidden state traverses only its dilation-2 convolution, giving 8 pixels. The longest reach is therefore 12 pixels per axis, or $12\sqrt{2}\approx17.0$ pixels diagonally, strictly larger than A's reach.
+
+Dilation adds no weights. D therefore retains 480,784 parameters, below the 721,176 limit.

@@ -23,3 +23,22 @@ stage8_results/
 stage8_results.zip
 q2_final_results/
 q2_final_results.zip
+
+# LaTeX build intermediates; the final PDF and source bundle are tracked.
+/output/pdf/*.aux
+/output/pdf/*.log
+/output/pdf/*.out
+/output/pdf/*.toc
+/output/pdf/*.xdv
+/output/pdf/*.fls
+/output/pdf/*.fdb_latexmk
+/output/pdf/*.synctex.gz
+/report/*.aux
+/report/*.log
+/report/*.out
+/report/*.toc
+/report/*.xdv
+/report/*.fls
+/report/*.fdb_latexmk
+/report/*.synctex.gz
+/report/main.pdf

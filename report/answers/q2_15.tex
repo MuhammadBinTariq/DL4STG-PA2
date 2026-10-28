@@ -1,0 +1,5 @@
+Model B learns approximate consistency through augmentation, but its gaps remain nonzero: $C_M=0.00121$ and $C_R=0.00133$. Built-in symmetry is exact mathematically because transforming the input only reorders the eight aligned forecasts. The measured gaps are around $10^{-17}$, reflecting floating-point rounding.
+
+Original and transformed errors improved slightly after wrapping. B's mean original $E^{(5)}$ decreased from 0.0227 to 0.0221. D also improved slightly in full precision, although both values round to 0.0272. Inference time increased from approximately 0.19 to 1.49 seconds per 1,000 videos, roughly eight times, with no additional training.
+
+Averaging can hurt accuracy when branches disagree about digit positions and smear an otherwise good forecast. Here, the mean errors decreased despite the visible blur.

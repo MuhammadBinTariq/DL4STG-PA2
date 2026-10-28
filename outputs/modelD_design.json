@@ -1,0 +1,25 @@
+{
+  "patch_factor": 4,
+  "hidden_channels": [
+    64,
+    64
+  ],
+  "kernel_sizes": [
+    3,
+    3
+  ],
+  "dilations": [
+    1,
+    2
+  ],
+  "paddings": [
+    1,
+    2
+  ],
+  "parameters": 480784,
+  "parameter_limit": 721176,
+  "reach_per_axis": 12,
+  "maximum_diagonal_reach": 16.970562748477143,
+  "longest_path": "input or previous h1 -> layer 1 -> layer 2 -> readout",
+  "rollout": "unchanged baseline nine updates, returning outputs 5-9"
+}

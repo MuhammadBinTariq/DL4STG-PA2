@@ -1,0 +1,3 @@
+Figure 6(b). Final model: symmetrised D, seed 0, original test video 9021.
+Same Figure 5 video: five inputs and the first two predicted/true future frames at each speed.
+Labels identify original-video frame numbers.

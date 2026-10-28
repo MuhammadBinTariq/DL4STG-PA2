@@ -1,0 +1,25 @@
+\resulttable{5}{Models A--D: errors, consistency, parameter count and measured cost. Each cell gives the mean above (seed 0, seed 1).}
+{\small\textit{(a) Original/transformed errors and consistency gaps}}\par\vspace{2pt}
+\par\begingroup\centering\fontsize{8.5}{10.5}\selectfont\setlength{\parskip}{0pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Model & $E^{(5)}$, $1\times$ & $E_M$ & $E_R$ & $C_M$ & $C_R$ \\
+\midrule
+A & \shortstack{0.0224\\[-1pt](0.0228, 0.0219)} & \shortstack{0.0230\\[-1pt](0.0234, 0.0226)} & \shortstack{0.0239\\[-1pt](0.0244, 0.0234)} & \shortstack{0.00166\\[-1pt](0.00165, 0.00168)} & \shortstack{0.00286\\[-1pt](0.00283, 0.00289)} \\
+B & \shortstack{0.0227\\[-1pt](0.0236, 0.0217)} & \shortstack{0.0226\\[-1pt](0.0235, 0.0218)} & \shortstack{0.0227\\[-1pt](0.0236, 0.0218)} & \shortstack{0.00121\\[-1pt](0.00118, 0.00124)} & \shortstack{0.00133\\[-1pt](0.00125, 0.00142)} \\
+C & \shortstack{0.0270\\[-1pt](0.0275, 0.0264)} & \shortstack{0.0272\\[-1pt](0.0277, 0.0267)} & \shortstack{0.0280\\[-1pt](0.0285, 0.0275)} & \shortstack{$8.63\!\times\!10^{-4}$\\[-1pt]($8.74\!\times\!10^{-4}$, $8.52\!\times\!10^{-4}$)} & \shortstack{0.00183\\[-1pt](0.00183, 0.00183)} \\
+D & \shortstack{0.0272\\[-1pt](0.0271, 0.0274)} & \shortstack{0.0274\\[-1pt](0.0273, 0.0275)} & \shortstack{0.0284\\[-1pt](0.0283, 0.0284)} & \shortstack{$9.18\!\times\!10^{-4}$\\[-1pt](0.00109, $7.45\!\times\!10^{-4}$)} & \shortstack{0.00211\\[-1pt](0.00232, 0.00191)} \\
+\bottomrule
+\end{tabular}\par\endgroup\vspace{5pt}
+{\small\textit{(b) Two-horizon speed errors, parameters and cost}}\par\vspace{2pt}
+\par\begingroup\centering\fontsize{8.5}{10.5}\selectfont\setlength{\parskip}{0pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Model & $E^{(2)}$, $1\times$ & $E^{(2)}$, $2\times$ & $E^{(2)}$, $3\times$ & Params & Train s/epoch & Inference s/1,000 \\
+\midrule
+A & \shortstack{0.0189\\[-1pt](0.0195, 0.0182)} & \shortstack{0.0443\\[-1pt](0.0436, 0.0451)} & \shortstack{0.0503\\[-1pt](0.0499, 0.0506)} & 480784 & \shortstack{6.10\\[-1pt](6.11, 6.09)} & \shortstack{0.195\\[-1pt](0.187, 0.202)} \\
+B & \shortstack{0.0190\\[-1pt](0.0199, 0.0182)} & \shortstack{0.0443\\[-1pt](0.0435, 0.0452)} & \shortstack{0.0509\\[-1pt](0.0505, 0.0513)} & 480784 & \shortstack{6.54\\[-1pt](6.56, 6.52)} & \shortstack{0.188\\[-1pt](0.190, 0.187)} \\
+C & \shortstack{0.0231\\[-1pt](0.0238, 0.0225)} & \shortstack{0.0291\\[-1pt](0.0292, 0.0290)} & \shortstack{0.0333\\[-1pt](0.0335, 0.0332)} & 480784 & \shortstack{6.21\\[-1pt](6.20, 6.22)} & \shortstack{0.191\\[-1pt](0.191, 0.191)} \\
+D & \shortstack{0.0245\\[-1pt](0.0243, 0.0247)} & \shortstack{0.0288\\[-1pt](0.0286, 0.0290)} & \shortstack{0.0325\\[-1pt](0.0324, 0.0325)} & 480784 & \shortstack{6.21\\[-1pt](6.21, 6.21)} & \shortstack{0.190\\[-1pt](0.192, 0.188)} \\
+\bottomrule
+\end{tabular}\par\endgroup\vspace{5pt}

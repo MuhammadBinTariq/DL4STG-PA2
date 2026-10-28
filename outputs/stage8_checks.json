@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "synthetic_window_cases": 136,
+  "group_elements": 8,
+  "parameters_B_C_D": 480784,
+  "D_reach_per_axis": 12,
+  "D_forecast_shape": [
+    2,
+    5,
+    1,
+    64,
+    64
+  ],
+  "D_feedback_gradient_absolute_sum": 0.0005303217913024127,
+  "device": "cuda",
+  "note": "Synthetic correctness checks only; no optimizer update or test evaluation."
+}

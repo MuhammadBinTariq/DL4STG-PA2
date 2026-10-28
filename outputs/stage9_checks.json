@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "tested_group_elements": 8,
+  "toy_gaps": {
+    "M": {
+      "raw_C": 0.006337479688227177,
+      "wrapped_C": 1.5031378919339033e-15
+    },
+    "R": {
+      "raw_C": 0.012963706627488136,
+      "wrapped_C": 1.5872719805187785e-15
+    }
+  },
+  "max_absolute_tolerance": 1e-06,
+  "note": "Synthetic wrapper checks only; not learned-model test metrics."
+}

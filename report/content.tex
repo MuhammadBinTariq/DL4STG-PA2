@@ -1,0 +1,90 @@
+
+\section{Setup and Training Motion}
+Moving MNIST uses a fixed 8,000/1,000/1,000 train/validation/test video split, with twenty $64\times64$ grayscale frames per video. Five inputs forecast five frames; at $3\times$ and start 1, only two targets exist. All learned models use Adam at $10^{-3}$, batch size 32, 30 epochs, final weights and seeds 0/1 on an NVIDIA A100-SXM4-40GB. Loss weights videos equally after averaging their valid targets. Tests use all 1,000 videos at start 1; entries are mean (seed 0, seed 1). $E^{(5)}$ and $E^{(2)}$ average five and two horizons respectively.
+\[
+C_T=\operatorname{MSE}\!\left(f(TX),T(f(X))\right),\qquad
+E_T=\operatorname{MSE}\!\left(f(TX),T(Y)\right).
+\]
+\input{tables/table1.tex}
+All three group-relation checks passed with exact equality. Optical flow uses the specified Farneback settings on the first 50 training videos.
+\answer{1}{Training motion statistics}
+\answer{2}{Effects of the transformations}
+\clearpage
+\resultfigure[0.85]{Figure 1}{figure1_motion_statistics}{Optical flow from 50 training videos and 950 consecutive frame pairs. The 103,050 retained pixels have intensity above 0.2 at the same location in both frames and flow magnitude above 0.5 pixels/frame. Bars show fractions of retained pixels; median speed is 3.32 pixels/frame. Direction uses 18 bins of $20^\circ$, with $0^\circ$ right and $90^\circ$ up.}
+\clearpage
+\section{Baseline ConvLSTM}
+The baseline has two 64-channel ConvLSTM layers and the prescribed nine-step autoregressive rollout without teacher forcing; outputs of updates 5--9 give the five forecasts.
+\answer{3}{Model A's reach}
+\input{tables/table2.tex}
+\answer{4}{Baseline performance}
+\clearpage
+\resultfigure{Figure 2}{figure2_modelA_examples}{Model A, seed 0, final epoch 30, on original $1\times$ test videos 9000--9002. Columns 1--5 are observed frames and columns 6--10 are future frames. Each pair of rows shows predictions and ground truth. The examples include overlapping digits.}
+\answer{5}{Predictions before testing the baseline}
+{\small\color{muted}Prediction preserved verbatim from pre-test commit \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/commit/31adeaa74eaec058ac1a8b2f945f9e2c0c178ea8}{\texttt{31adeaa}}.}
+\clearpage
+\section{Testing the Baseline}
+\input{tables/table3.tex}
+\answer{6}{Consistency gap and error}
+\answer{7}{Video 9925 observations}
+\answer{8}{Transformation comparison}
+\clearpage
+
+\resultfigure{Figure 3(a)}{figure3a_M_video9257}{Model A, seed 0, $1\times$, video 9257, transformation $M$. $C_M=0.00456$, $E_M=0.0311$. The two largest per-video gaps were selected separately for each transformation.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure3a_M_video9257.gif}{\nolinkurl{outputs/gifs/figure3a_M_video9257.gif}}.}
+\vfill
+\resultfigure{Figure 3(b)}{figure3b_M_video9348}{Model A, seed 0, $1\times$, video 9348, transformation $M$. $C_M=0.00436$, $E_M=0.0237$. The two largest per-video gaps were selected separately for each transformation.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure3b_M_video9348.gif}{\nolinkurl{outputs/gifs/figure3b_M_video9348.gif}}.}
+\clearpage
+\resultfigure{Figure 3(c)}{figure3c_R_video9497}{Model A, seed 0, $1\times$, video 9497, transformation $R$. $C_R=0.00792$, $E_R=0.0331$. The two largest per-video gaps were selected separately for each transformation.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure3c_R_video9497.gif}{\nolinkurl{outputs/gifs/figure3c_R_video9497.gif}}.}
+\vfill
+\resultfigure{Figure 3(d)}{figure3d_R_video9925}{Model A, seed 0, $1\times$, video 9925, transformation $R$. $C_R=0.00749$, $E_R=0.0364$. The two largest per-video gaps were selected separately for each transformation.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure3d_R_video9925.gif}{\nolinkurl{outputs/gifs/figure3d_R_video9925.gif}}.}
+
+\clearpage
+\resultfigure[0.85]{Figure 4}{figure4_consistency_histograms}{Per-video mirror and rotation consistency gaps for seed-0 model A on all 1,000 original $1\times$ test windows. Lines mark the Figure 3 cases: 9257 and 9348 for $M$, and 9497 and 9925 for $R$.}
+\clearpage
+\subsection*{Faster motion}
+\input{tables/table4.tex}
+\answer{9}{Faster motion and architectural reach}
+\answer{10}{Separating unfamiliar motion from limited reach}
+\clearpage
+\resultfigure{Figure 5}{figure5_speed_examples}{Model A, seed 0, test video 9021. Each speed shows five inputs and the first two predicted/true future frames. Header numbers refer to frames in the original video. The digits do not overlap in any displayed true frame.}
+\clearpage
+\section{What Can Data Fix?}
+\answer{11}{Predictions before training B--D}
+{\small\color{muted}Prediction preserved verbatim from pre-training commit \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/commit/2e5b8f5866a2de7c84ae2ed73e1f58e150513758}{\texttt{2e5b8f5}}.}
+\answer{12}{Model D and its reach}
+B retains A's architecture and $1\times$ training, adding uniform square-symmetry augmentation. C retains A's architecture and samples speeds uniformly from $\{1,2,3\}$; D uses the same speed protocol with the larger reach described above. C and D sample starts 1--14, 1--8 and 1--2 at the three speeds respectively.
+\input{tables/table5.tex}
+\clearpage
+\answer{13}{Model failures}
+\answer{14}{Accuracy on original clips}
+\section{The Final Model}
+The final model is symmetrised D, the prescribed default. D gives the lowest mean $3\times$ error in Table 5. No optional D+B run or additional training is used. All eight transformed branches run the complete forecaster before inverse transformation and averaging; they share one set of weights.
+The group is $G=\{R^a,MR^a:a=0,1,2,3\}$; $MR^a$ rotates first and then mirrors.
+\[
+\bar f(X)=\frac18\sum_{g\in G}g^{-1}f(gX).
+\]
+For $h\in G$, set $q=gh$. Right multiplication permutes the group and $g^{-1}=h q^{-1}$, so
+\[
+\bar f(hX)=\frac18\sum_{q\in G}h q^{-1}f(qX)=h\bar f(X).
+\]
+A mirror/rotation is a linear pixel permutation, so it commutes with averaging. Thus $C_M=C_R=0$ in exact arithmetic for any base forecaster. The measured floating-point gaps are retained in Table 6.
+\clearpage
+\input{tables/table6.tex}
+\answer{15}{Learned and built-in symmetry}
+\answer{16}{Returning to video 9925}
+\answer{17}{Final verdict}
+\clearpage
+
+\resultfigure{Figure 6(a1)}{figure6a1_M_video9257}{Final model: symmetrised D, seed 0, $1\times$, video 9257, transformation $M$. $C_M$ = $4.90\!\times\!10^{-17}$, $E_M=0.0331$. The video is the same baseline Figure 3 case; rows 3 and 4 agree up to floating-point error.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure6a1_M_video9257.gif}{\nolinkurl{outputs/gifs/figure6a1_M_video9257.gif}}.}
+\vfill
+\resultfigure{Figure 6(a2)}{figure6a2_M_video9348}{Final model: symmetrised D, seed 0, $1\times$, video 9348, transformation $M$. $C_M$ = $3.84\!\times\!10^{-17}$, $E_M=0.0269$. The video is the same baseline Figure 3 case; rows 3 and 4 agree up to floating-point error.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure6a2_M_video9348.gif}{\nolinkurl{outputs/gifs/figure6a2_M_video9348.gif}}.}
+\clearpage
+\resultfigure{Figure 6(a3)}{figure6a3_R_video9497}{Final model: symmetrised D, seed 0, $1\times$, video 9497, transformation $R$. $C_R$ = $5.52\!\times\!10^{-17}$, $E_R=0.0338$. The video is the same baseline Figure 3 case; rows 3 and 4 agree up to floating-point error.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure6a3_R_video9497.gif}{\nolinkurl{outputs/gifs/figure6a3_R_video9497.gif}}.}
+\vfill
+\resultfigure{Figure 6(a4)}{figure6a4_R_video9925}{Final model: symmetrised D, seed 0, $1\times$, video 9925, transformation $R$. $C_R$ = $5.79\!\times\!10^{-17}$, $E_R=0.0388$. The video is the same baseline Figure 3 case; rows 3 and 4 agree up to floating-point error.\\ GIF: \href{https://github.com/MuhammadBinTariq/DL4STG-PA2/blob/main/outputs/gifs/figure6a4_R_video9925.gif}{\nolinkurl{outputs/gifs/figure6a4_R_video9925.gif}}.}
+
+\clearpage
+\resultfigure{Figure 6(b)}{figure6b_speed_examples}{Final model: symmetrised D, seed 0, original test video 9021. This repeats Figure 5 on the same video, using the same five inputs and first two future frames at each speed. Header numbers identify original-video frames.}
+\clearpage
+\subsection*{Supplementary comparison for Q2.16}
+\resultfigure{Video 9925 diagnostic}{q2_16_video9925_comparison}{Rotated video 9925, seed 0, future frames 6--10. The ground truth and A/B/C/D/final forecasts show that enforcing consistency does not restore sharp digit identity or guarantee correct motion.}
+\endinput

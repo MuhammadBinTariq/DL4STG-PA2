@@ -1,0 +1,118 @@
+{
+  "table1": [
+    {
+      "Check": "(a) max|M(M(x)) - x|",
+      "Expected": 0,
+      "Yours": 0.0
+    },
+    {
+      "Check": "(b) max|R^4(x) - x|",
+      "Expected": 0,
+      "Yours": 0.0
+    },
+    {
+      "Check": "(c) max|MRM(x) - R^-1(x)|",
+      "Expected": 0,
+      "Yours": 0.0
+    },
+    {
+      "Check": "(d) bright pixel of M(p)",
+      "Expected": "(7, 10, 43)",
+      "Yours": "(7, 10, 43)"
+    },
+    {
+      "Check": "(e) bright pixel of R(p)",
+      "Expected": "(7, 43, 10)",
+      "Yours": "(7, 43, 10)"
+    },
+    {
+      "Check": "(f) 1x input / target frames",
+      "Expected": "1, 2, 3, 4, 5 / 6, 7, 8, 9, 10",
+      "Yours": "1, 2, 3, 4, 5 / 6, 7, 8, 9, 10"
+    },
+    {
+      "Check": "(g) 2x input / target frames",
+      "Expected": "1, 3, 5, 7, 9 / 11, 13, 15, 17, 19",
+      "Yours": "1, 3, 5, 7, 9 / 11, 13, 15, 17, 19"
+    },
+    {
+      "Check": "(h) 3x input / target frames",
+      "Expected": "1, 4, 7, 10, 13 / 16, 19",
+      "Yours": "1, 4, 7, 10, 13 / 16, 19"
+    }
+  ],
+  "exact_equality": {
+    "(a) max|M(M(x)) - x|": true,
+    "(b) max|R^4(x) - x|": true,
+    "(c) max|MRM(x) - R^-1(x)|": true
+  },
+  "boundary_checks": [
+    {
+      "Protocol": "A/B",
+      "Speed": 1,
+      "Last start": 11,
+      "Real target frames": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "Target mask": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "Protocol": "C/D",
+      "Speed": 1,
+      "Last start": 14,
+      "Real target frames": [
+        19,
+        20
+      ],
+      "Target mask": [
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "Protocol": "C/D",
+      "Speed": 2,
+      "Last start": 8,
+      "Real target frames": [
+        18,
+        20
+      ],
+      "Target mask": [
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "Protocol": "C/D",
+      "Speed": 3,
+      "Last start": 2,
+      "Real target frames": [
+        17,
+        20
+      ],
+      "Target mask": [
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    }
+  ]
+}

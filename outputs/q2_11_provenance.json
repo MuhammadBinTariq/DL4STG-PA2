@@ -1,0 +1,5 @@
+{
+  "commit": "2e5b8f5866a2de7c84ae2ed73e1f58e150513758",
+  "document_sha256": "991a1bc28d9161a9c861e6a8867089e3b8072cf0424679f15c132d654229a7de",
+  "document": "### Q2.11 Model Prediction\n\nI expect model B to significantly resolve transformation equivariance and reduce the transformation consistency gaps. I expect model C to improve the variable speed forecasts since the same architecture is exposed uniformly to varying motions. Model D's larger reach due to dilation may improve the faster-speed forecasts further.\n"
+}

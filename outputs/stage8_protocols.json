@@ -1,0 +1,179 @@
+{
+  "B": {
+    "model": "B",
+    "epochs": 30,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "training_videos": 8000,
+    "precision": "float32",
+    "speed_choices": [
+      1
+    ],
+    "allowed_start_frames": {
+      "1": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    "symmetry_group_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "patch_factor": 4,
+    "hidden_channels": [
+      64,
+      64
+    ],
+    "kernel_sizes": [
+      3,
+      3
+    ],
+    "dilations": [
+      1,
+      1
+    ],
+    "trainable_parameters": 480784,
+    "loss": "MSE per video over available targets, then mean over videos"
+  },
+  "C": {
+    "model": "C",
+    "epochs": 30,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "training_videos": 8000,
+    "precision": "float32",
+    "speed_choices": [
+      1,
+      2,
+      3
+    ],
+    "allowed_start_frames": {
+      "1": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "2": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "symmetry_group_ids": [
+      0
+    ],
+    "patch_factor": 4,
+    "hidden_channels": [
+      64,
+      64
+    ],
+    "kernel_sizes": [
+      3,
+      3
+    ],
+    "dilations": [
+      1,
+      1
+    ],
+    "trainable_parameters": 480784,
+    "loss": "MSE per video over available targets, then mean over videos"
+  },
+  "D": {
+    "model": "D",
+    "epochs": 30,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "training_videos": 8000,
+    "precision": "float32",
+    "speed_choices": [
+      1,
+      2,
+      3
+    ],
+    "allowed_start_frames": {
+      "1": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "2": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "3": [
+        1,
+        2
+      ]
+    },
+    "symmetry_group_ids": [
+      0
+    ],
+    "patch_factor": 4,
+    "hidden_channels": [
+      64,
+      64
+    ],
+    "kernel_sizes": [
+      3,
+      3
+    ],
+    "dilations": [
+      1,
+      2
+    ],
+    "trainable_parameters": 480784,
+    "loss": "MSE per video over available targets, then mean over videos"
+  }
+}

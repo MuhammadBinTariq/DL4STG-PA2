@@ -1,0 +1,3 @@
+seed,epochs,final_training_mse,mean_epoch_seconds,total_training_seconds,gpu,final_checkpoint
+0,30,0.02291144561767578,6.113199178899966,183.39597536699898,NVIDIA A100-SXM4-40GB,/content/drive/MyDrive/DL4STG_PA2/training_runs/A_seed0/final.pt
+1,30,0.021865619659423827,6.088139274566697,182.64417823700092,NVIDIA A100-SXM4-40GB,/content/drive/MyDrive/DL4STG_PA2/training_runs/A_seed1/final.pt

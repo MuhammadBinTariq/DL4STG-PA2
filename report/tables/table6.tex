@@ -1,0 +1,21 @@
+\resulttable{6}{Symmetrised B and D; symmetrised D is the final model. Gaps are measured floating-point values. Training time belongs to the underlying model. Each cell gives the mean above (seed 0, seed 1).}
+{\small\textit{(a) Original/transformed errors and consistency gaps}}\par\vspace{2pt}
+\par\begingroup\centering\fontsize{8.5}{10.5}\selectfont\setlength{\parskip}{0pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Model & $E^{(5)}$, $1\times$ & $E_M$ & $E_R$ & $C_M$ & $C_R$ \\
+\midrule
+Sym B & \shortstack{0.0221\\[-1pt](0.0231, 0.0212)} & \shortstack{0.0221\\[-1pt](0.0231, 0.0212)} & \shortstack{0.0221\\[-1pt](0.0231, 0.0212)} & \shortstack{$4.29\!\times\!10^{-17}$\\[-1pt]($3.93\!\times\!10^{-17}$, $4.64\!\times\!10^{-17}$)} & \shortstack{$4.40\!\times\!10^{-17}$\\[-1pt]($4.04\!\times\!10^{-17}$, $4.76\!\times\!10^{-17}$)} \\
+Sym D (final) & \shortstack{0.0272\\[-1pt](0.0270, 0.0273)} & \shortstack{0.0272\\[-1pt](0.0270, 0.0273)} & \shortstack{0.0272\\[-1pt](0.0270, 0.0273)} & \shortstack{$3.34\!\times\!10^{-17}$\\[-1pt]($3.65\!\times\!10^{-17}$, $3.04\!\times\!10^{-17}$)} & \shortstack{$3.44\!\times\!10^{-17}$\\[-1pt]($3.76\!\times\!10^{-17}$, $3.12\!\times\!10^{-17}$)} \\
+\bottomrule
+\end{tabular}\par\endgroup\vspace{5pt}
+{\small\textit{(b) Two-horizon speed errors, parameters and cost}}\par\vspace{2pt}
+\par\begingroup\centering\fontsize{8.5}{10.5}\selectfont\setlength{\parskip}{0pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Model & $E^{(2)}$, $1\times$ & $E^{(2)}$, $2\times$ & $E^{(2)}$, $3\times$ & Params & Train s/epoch & Inference s/1,000 \\
+\midrule
+Sym B & \shortstack{0.0186\\[-1pt](0.0195, 0.0178)} & \shortstack{0.0435\\[-1pt](0.0428, 0.0442)} & \shortstack{0.0498\\[-1pt](0.0496, 0.0500)} & 480784 & \shortstack{6.54\\[-1pt](6.56, 6.52)} & \shortstack{1.49\\[-1pt](1.48, 1.50)} \\
+Sym D (final) & \shortstack{0.0245\\[-1pt](0.0243, 0.0247)} & \shortstack{0.0288\\[-1pt](0.0286, 0.0290)} & \shortstack{0.0324\\[-1pt](0.0323, 0.0325)} & 480784 & \shortstack{6.21\\[-1pt](6.21, 6.21)} & \shortstack{1.49\\[-1pt](1.49, 1.48)} \\
+\bottomrule
+\end{tabular}\par\endgroup\vspace{5pt}

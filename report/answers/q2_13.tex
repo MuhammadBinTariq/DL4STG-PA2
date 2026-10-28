@@ -1,0 +1,5 @@
+Failures under mirroring and rotation appear partly appearance related: compared with A, B's consistency gaps decrease (\(C_M\) from 0.00166 to 0.00121 and \(C_R\) from 0.00286 to 0.00133). The transformed errors also decrease: \(E_M\) from 0.0230 to 0.0226 and \(E_R\) from 0.0239 to 0.0227. However, augmentation also changes direction coverage, so this comparison cannot isolate appearance completely.
+
+The unfamiliar motion failures are the faster speed failures. With the same architecture, C reduces $E^{(2)}$ from 0.0443 to 0.0291 at $2\times$ and from 0.0503 to 0.0333 at $3\times$. Thus, exposure to faster motion substantially improves forecasting.
+
+There is weaker evidence for architectural reach being the main limitation here. D further reduces the $3\times$ error to 0.0325, but this is a modest improvement over C, rather than C failing and D fully resolving the failure. More training data will carry more distributional information thereby improving the overall learned weights but cannot change the reach which is primarily dependent on the spatial connections (i.e. architecture).

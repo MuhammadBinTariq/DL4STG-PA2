@@ -1,0 +1,5 @@
+Pixel unshuffle changes the $64\times64$ image into a $16\times16$ grid, placing each $4\times4$ patch into channels. Therefore, one folded-grid position corresponds to four original pixels.
+
+A $3\times3$ convolution moves information by at most one folded-grid position along each axis. Paths from the current input or the previous layer-1 hidden state traverse both ConvLSTM layers; the previous layer-2 hidden state traverses only layer 2. Thus, the longest within-step path contains two spatial convolutions.
+
+The reach is therefore $2\times4=8$ original pixels per axis, or $8\sqrt{2}\approx11.3$ pixels diagonally. The patch width is not added, and the $1\times1$ readout and shuffle operations do not increase this reach.

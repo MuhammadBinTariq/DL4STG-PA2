@@ -1,0 +1,31 @@
+{
+  "device": "cuda",
+  "gpu_name": "NVIDIA A100-SXM4-40GB",
+  "trainable_parameters": 480784,
+  "component_parameters": {
+    "ConvLSTM 1": 184576,
+    "ConvLSTM 2": 295168,
+    "Readout": 1040
+  },
+  "input_shape": [
+    2,
+    5,
+    1,
+    64,
+    64
+  ],
+  "forecast_shape": [
+    2,
+    5,
+    1,
+    64,
+    64
+  ],
+  "rollout_updates": 9,
+  "synthetic_masked_loss": 5.0,
+  "feedback_gradient_absolute_sum": 0.00038397658499889076,
+  "diagnostic_loss_before_update": 0.2331656515598297,
+  "diagnostic_loss_after_update": 0.22963812947273254,
+  "readout_weights_changed": true,
+  "note": "Diagnostic checks on two training videos; not a trained model or test-set performance result."
+}
