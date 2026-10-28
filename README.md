@@ -4,7 +4,7 @@ AI651: Deep Learning for Space, Time and Graphs, Fall 2026.
 
 ## Notebooks and saved predictions
 
-- `DL4STG_PA2_Q2.ipynb`: working Colab notebook, including executed results through Stage 7 and written answers through Q2.11.
+- `DL4STG_PA2_Q2.ipynb`: working Colab notebook, including executed results through Stage 8, answers through Q2.14, and the unexecuted final stage.
 - `DL4STG_PA2_Q2_2-5.ipynb`: preserved executed and answered notebook at the pre-stress-test checkpoint.
 - `predictions/Q2.5.md`: verbatim Q2.5 answer extracted from that checkpoint. It must remain unchanged after baseline stress testing begins.
 - `predictions/Q2.11.md`: verbatim three-sentence prediction recorded before training B-D. It must remain unchanged in the final report.
@@ -12,7 +12,7 @@ AI651: Deep Learning for Space, Time and Graphs, Fall 2026.
 
 ## Current progress
 
-Data/window checks, optical-flow analysis, both 30-epoch model A training runs (seeds 0 and 1), original-test-set baseline evaluation, and baseline mirror, rotation, and speed stress tests are complete. The working notebook contains the executed results through Stage 7. Tables 1-4, Figures 1-5, and the four Figure 3 GIFs are saved under `outputs/`; written answers currently cover Q2.1-Q2.11. Stage 8 code is ready for B-D training and Table 5, but its cells are unexecuted.
+Data/window checks, optical-flow analysis, all A-D training runs (seeds 0 and 1, 30 epochs each), baseline stress tests, and Table 5 evaluation are complete. The working notebook contains the executed results through Stage 8 and answers through Q2.14. Tables 1-5, Figures 1-5, and the four Figure 3 GIFs are saved under `outputs/`; the remaining Stage 8 metadata is also saved in Drive and will be included in the final report archive. Stage 9 code is ready but has not been executed.
 
 The baseline uses the handout's architecture, Adam at 1e-3, batch size 32, and final-epoch weights. Training and baseline evaluation ran on an NVIDIA A100-SXM4-40GB. The notebook records environment versions, per-seed results, and measured timing.
 
@@ -40,7 +40,7 @@ Figure 5 uses original test video 9021. Visual inspection confirms that the two 
 
 Section 36 saves `MyDrive/DL4STG_PA2/baseline_stress_results.zip`. Its exported `outputs/` files are tracked in this repository, preserving the GIF paths in the Figure 3 captions. The local archive and duplicate extraction folder are ignored. The archive excludes large datasets and model/prediction tensors.
 
-The stress-test cells have been executed and the exported results reviewed. Answers Q2.6-Q2.10 and the pre-training Q2.11 prediction are now recorded. The next stage implements and trains B-D. The frozen Q2.5 prediction and the answered pre-test notebook remain unchanged.
+The stress-test cells have been executed and the exported results reviewed. Answers Q2.6-Q2.10 and the pre-training Q2.11 prediction are recorded. Models B-D have subsequently completed training. The frozen Q2.5 prediction and the answered pre-test notebook remain unchanged.
 
 ## Stage 8: augmented training and Table 5
 
@@ -61,3 +61,19 @@ Table 5 evaluates A-D on the same 1,000 test videos at start 1, using both seeds
 Section 46 exports `MyDrive/DL4STG_PA2/stage8_results.zip`, containing Table 5, full-precision metrics, hardware labels, training summaries, model D's design and correctness-check outputs. Review it before answering Q2.13-Q2.14 and starting the final symmetrisation stage.
 
 The augmentation/window rules, constructor parameter arithmetic, spatial support and frozen prediction checks were verified locally. The actual PyTorch forward/backward checks in section 39 must pass in Colab before training.
+
+The recorded Stage 8 run passed section 39, completed all six B-D training runs and evaluated Table 5 on an A100. Section 40 contains a later setup repair and is marked unexecuted; rerun it only if resuming training. The recorded runs used the equivalent shared helpers restored from sections 16 and 20.
+
+## Stage 9: final symmetry average, Table 6 and Figure 6
+
+The final model is symmetrised D, the handout's default. It averages the inverse-transformed outputs of eight complete nine-step forecasts. Each branch uses its own autoregressive feedback, and no additional training is performed. There is one set of 480,784 learned parameters.
+
+In the current runtime, run sections **47-53**. Section 48 checks exact group consistency up to floating-point error; sections 49-50 evaluate both seeds of symmetrised B and D and generate Table 6; sections 51-52 generate Figure 6 and a fixed-video diagnostic for Q2.16; section 53 packages the results. Original inference timing includes all eight transformations, complete forward passes, inverse transformations and averaging. Training time is inherited from the underlying learned model.
+
+In a fresh GPU runtime, restore sections **1-4, 6-7, 14-15 and 38**, then run **47-53**. Stage 9 supplies its own imports, group functions, checkpoint loader and evaluation helpers. It reads final-epoch checkpoints and the completed Stage 8 metrics from Drive.
+
+Figure 6(a) uses the original Figure 3 cases: mirror videos 9257 and 9348, and rotation videos 9497 and 9925. Its captions name the four new GIFs under `outputs/gifs/`. Figure 6(b) uses original speed video 9021, preserving Figure 5's displayed frame numbers. No cases are reselected. A supplementary A/B/C/D/final comparison on rotated video 9925 supports the distinction between correct motion and guaranteed consistency.
+
+Section 53 exports `MyDrive/DL4STG_PA2/q2_final_results.zip`, collecting Tables 1-6, Figures 1-6, captions, the eight required GIFs, summary metrics and diagnostic comparisons. It excludes datasets, checkpoints and prediction tensors. Extract its `outputs/` folder into the repository, then use the measured results to finish Q2.15-Q2.17. Q2.17 is limited to 150 words.
+
+The proof of exact equivariance is included before section 47. Local checks exercised the actual wrapper source using NumPy, all eight group operations, an incorrect-inverse negative control, setup dependencies, formatting and the GIF layout. Section 48 supplies the actual PyTorch checks for Colab; learned-model Table 6 results remain pending.
