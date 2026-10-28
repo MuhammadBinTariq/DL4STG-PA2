@@ -26,3 +26,15 @@ Large datasets and checkpoint/prediction tensors are kept in Drive and excluded 
 ## Submission
 
 The final PDF report will include the repository link, required results, written answers, and AI-use disclosure. The repository must be public at submission time. Q2.11 predictions must also be committed before training B-D.
+
+## Resume for baseline stress tests
+
+Stage 7 in the working notebook implements Tables 3-4 and Figures 3-5, including the four required Figure 3 GIFs. The pre-test Q2.5 commit is `31adeaa74eaec058ac1a8b2f945f9e2c0c178ea8`.
+
+In a fresh Colab GPU runtime, rerun numbered sections **1-4, 6-7, 14-15, and 24**, then run the new sections **28-36**. The saved model checkpoints and original prediction caches are loaded from Drive; no training or optical-flow rerun is needed.
+
+Inspect section 34's preview and confirm that section 35's Figure 5 clip has no overlapping digits in any displayed true frame. The component-based screen is only a candidate-selection aid.
+
+Section 36 saves `MyDrive/DL4STG_PA2/baseline_stress_results.zip`. Extract its `outputs/` folder into this repository to preserve the GIF paths in the Figure 3 captions. The archive excludes large datasets and model/prediction tensors.
+
+The new stress-test cells are initially unexecuted. Run and review them before drafting Q2.6-Q2.10. The frozen prediction snapshot and the answered pre-test notebook remain unchanged.
