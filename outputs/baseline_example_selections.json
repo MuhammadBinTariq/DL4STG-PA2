@@ -1,0 +1,59 @@
+{
+  "pretest_commit": "31adeaa74eaec058ac1a8b2f945f9e2c0c178ea8",
+  "figure3_cases": [
+    {
+      "panel": "a",
+      "transform": "M",
+      "rank": 1,
+      "test_index": 257,
+      "original_video_index": 9257,
+      "consistency_gap": 0.004555420484393835,
+      "gif_path": "outputs/gifs/figure3a_M_video9257.gif"
+    },
+    {
+      "panel": "b",
+      "transform": "M",
+      "rank": 2,
+      "test_index": 348,
+      "original_video_index": 9348,
+      "consistency_gap": 0.004362346138805151,
+      "gif_path": "outputs/gifs/figure3b_M_video9348.gif"
+    },
+    {
+      "panel": "c",
+      "transform": "R",
+      "rank": 1,
+      "test_index": 497,
+      "original_video_index": 9497,
+      "consistency_gap": 0.007923322729766369,
+      "gif_path": "outputs/gifs/figure3c_R_video9497.gif"
+    },
+    {
+      "panel": "d",
+      "transform": "R",
+      "rank": 2,
+      "test_index": 925,
+      "original_video_index": 9925,
+      "consistency_gap": 0.007489226292818785,
+      "gif_path": "outputs/gifs/figure3d_R_video9925.gif"
+    }
+  ],
+  "figure5_test_index": 21,
+  "figure5_original_video_index": 9021,
+  "figure5_displayed_true_frames": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    13,
+    16,
+    19
+  ],
+  "figure5_overlap_confirmation": "Visually reviewed Figure 5: the two digits remain separated in every displayed ground-truth frame."
+}

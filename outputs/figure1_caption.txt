@@ -1,0 +1,3 @@
+Figure 1. Optical flow on the first 50 training videos (950 consecutive frame pairs).
+Kept pixel samples: 103,050; median speed: 3.32 pixels/frame. Bars show fractions of kept pixels.
+Retained pixels have intensity > 0.2 in both frames and flow magnitude > 0.5 pixels/frame.

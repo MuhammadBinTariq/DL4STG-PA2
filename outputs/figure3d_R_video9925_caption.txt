@@ -1,0 +1,3 @@
+Model A, seed 0, 1x. C_R=0.00749.
+Rows: X|f(X); T(X)|T(Y); T(X)|f(T(X)); T(X)|T(f(X)).
+GIF: outputs/gifs/figure3d_R_video9925.gif

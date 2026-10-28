@@ -7,11 +7,11 @@ AI651: Deep Learning for Space, Time and Graphs, Fall 2026.
 - `DL4STG_PA2_Q2.ipynb`: working Colab notebook, including executed results and written answers through Q2.5.
 - `DL4STG_PA2_Q2_2-5.ipynb`: preserved executed and answered notebook at the pre-stress-test checkpoint.
 - `predictions/Q2.5.md`: verbatim Q2.5 answer extracted from that checkpoint. It must remain unchanged after baseline stress testing begins.
-- `AI_USAGE.md`: working record of AI assistance for the final report disclosure.
+- `outputs/`: exported tables, figures, captions, GIFs, full-precision summary metrics, and example selections.
 
 ## Current progress
 
-Data/window checks, optical-flow analysis, both 30-epoch model A training runs (seeds 0 and 1), original-test-set baseline evaluation, Table 2, Figure 2, and answers Q2.1-Q2.5 are complete. Baseline mirror, rotation, and speed stress tests have not yet been run in this workflow.
+Data/window checks, optical-flow analysis, both 30-epoch model A training runs (seeds 0 and 1), original-test-set baseline evaluation, and baseline mirror, rotation, and speed stress tests are complete. The working notebook contains the executed results through Stage 7. Tables 1-4, Figures 1-5, and the four Figure 3 GIFs are saved under `outputs/`; written answers currently cover Q2.1-Q2.5.
 
 The baseline uses the handout's architecture, Adam at 1e-3, batch size 32, and final-epoch weights. Training and baseline evaluation ran on an NVIDIA A100-SXM4-40GB. The notebook records environment versions, per-seed results, and measured timing.
 
@@ -25,16 +25,18 @@ Large datasets and checkpoint/prediction tensors are kept in Drive and excluded 
 
 ## Submission
 
-The final PDF report will include the repository link, required results, written answers, and AI-use disclosure. The repository must be public at submission time. Q2.11 predictions must also be committed before training B-D.
+The final PDF report will include the repository link, required results, and written answers. The repository must be public at submission time. Q2.11 predictions must also be committed before training B-D.
 
-## Resume for baseline stress tests
+## Baseline stress-test results and runtime restoration
 
 Stage 7 in the working notebook implements Tables 3-4 and Figures 3-5, including the four required Figure 3 GIFs. The pre-test Q2.5 commit is `31adeaa74eaec058ac1a8b2f945f9e2c0c178ea8`.
 
 In a fresh Colab GPU runtime, rerun numbered sections **1-4, 6-7, 14-15, and 24**, then run the new sections **28-36**. The saved model checkpoints and original prediction caches are loaded from Drive; no training or optical-flow rerun is needed.
 
-Inspect section 34's preview and confirm that section 35's Figure 5 clip has no overlapping digits in any displayed true frame. The component-based screen is only a candidate-selection aid.
+Figure 3 uses original test videos 9257 and 9348 for mirroring, and 9497 and 9925 for rotation. These are the two largest seed-0 consistency gaps for each transformation. Figure 4 marks these cases across all 1,000 test videos.
 
-Section 36 saves `MyDrive/DL4STG_PA2/baseline_stress_results.zip`. Extract its `outputs/` folder into this repository to preserve the GIF paths in the Figure 3 captions. The archive excludes large datasets and model/prediction tensors.
+Figure 5 uses original test video 9021. Visual inspection confirms that the two digits remain separated in every displayed ground-truth frame at all three speeds. The component-based screen in section 34 is only a candidate-selection aid.
 
-The new stress-test cells are initially unexecuted. Run and review them before drafting Q2.6-Q2.10. The frozen prediction snapshot and the answered pre-test notebook remain unchanged.
+Section 36 saves `MyDrive/DL4STG_PA2/baseline_stress_results.zip`. Its exported `outputs/` files are tracked in this repository, preserving the GIF paths in the Figure 3 captions. The local archive and duplicate extraction folder are ignored. The archive excludes large datasets and model/prediction tensors.
+
+The stress-test cells have been executed and the exported results reviewed. Next, write Q2.6-Q2.10, then write and commit Q2.11 before training B-D. The frozen Q2.5 prediction and the answered pre-test notebook remain unchanged.

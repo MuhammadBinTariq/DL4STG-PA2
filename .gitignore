@@ -15,3 +15,7 @@ checkpoints/
 *.pth
 *.npy
 *.npz
+
+# Local copies of the Colab export; report files are tracked under outputs/.
+baseline_stress_results/
+baseline_stress_results.zip

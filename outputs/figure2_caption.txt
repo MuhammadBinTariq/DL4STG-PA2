@@ -1,0 +1,3 @@
+Figure 2. Model A, seed 0, final epoch 30; original 1x test windows.
+Original video indices: [9000, 9001, 9002]. Columns 1-5 are observed frames; columns 6-10 are future frames.
+Each pair of rows shows observed frames plus predictions, then observed frames plus ground truth.

@@ -1,0 +1,2 @@
+Figure 4. Per-video mirror and rotation consistency gaps for model A, seed 0,
+over all 1,000 original 1x test windows. Lines mark the Figure 3 examples.
