@@ -1,43 +1,110 @@
-# DL4STG Assignment 2 - Question 2
+# AI651 Assignment 2 (Fall 2026)
 
-AI651: Deep Learning for Space, Time and Graphs, Fall 2026.
+Muhammad Bin Tariq (27100017)
 
-## Report and results
+Deep Learning for Space, Time and Graphs. Question 1 proposes a river forecasting system. Question 2 studies motion, symmetry and spatial reach using Moving MNIST and ConvLSTM models.
 
-- [Compiled Q2 report](output/pdf/DL4STG_PA2_Q2_Report.pdf): 18 pages, covering Q2.1-Q2.17, Tables 1-6, Figures 1-6 and the video-9925 diagnostic.
-- [Editable LaTeX project](report/main.tex): PA1 visual style, concise prose and readable figure labels. Open the `report` folder or run `report/build.ps1` with XeLaTeX available.
-- [LaTeX source bundle](output/pdf/DL4STG_PA2_Q2_Report_Source.zip): all sources and figure assets needed to compile the report.
-- `DL4STG_PA2_Q2.ipynb`: final executed Colab notebook with all 17 answers. Minor prose corrections clarify axial/diagonal reach and appearance attribution; experimental code and outputs are unchanged.
-- `outputs/`: all exported tables, figures, captions, eight required GIFs, full-precision metrics and example selections.
+| Path | Contents |
+|---|---|
+| [Combined report](output/pdf/DL4STG_PA2_Report.pdf) | Start here: the Q1 proposal and completed Q2 study |
+| [report/main.tex](report/main.tex) | Main LaTeX document and cover |
+| [report/question1.tex](report/question1.tex) | Q1 proposal under the six required headings |
+| [report/answers/](report/answers/) | Written answers to Q2.1–Q2.17 |
+| [report/figures/](report/figures/) and [report/tables/](report/tables/) | Figure assets and tables included in the report |
+| [LaTeX source bundle](output/pdf/DL4STG_PA2_Report_Source.zip) | Complete editable report project |
+| [DL4STG_PA2_Q2.ipynb](DL4STG_PA2_Q2.ipynb) | Final executed Colab notebook, including code, outputs and answers |
+| [outputs/](outputs/) | Exported figures, tables, full-precision metrics and example selections |
+| [outputs/gifs/](outputs/gifs/) | Animated baseline and final-model forecasts |
+| [predictions/](predictions/) | Predictions recorded before the relevant experiments |
 
-The report preserves Q2.5 and Q2.11 verbatim. Q2.17 is 91 words. Table entries use the recorded mean and the two seeds; wrapped consistency gaps remain in scientific notation. All numerical results and figure cases match the executed notebook.
+## Question 1
 
-## Models and protocol
+The proposal predicts water levels one hour ahead at S1–S4, with forecasts issued every ten minutes. It combines historical water levels, rainfall and reservoir releases with future release schedules announced before issuance.
 
-A is the prescribed two-layer ConvLSTM with 480,784 parameters. B adds uniform square-symmetry augmentation at 1x. C uses uniformly sampled 1x/2x/3x windows. D uses C's sampling and changes the second ConvLSTM layer to dilation 2 with padding 2: its reach is 12 original pixels per axis, versus A's 8, with the same parameter count.
+The architecture alternates spatial attention across eight locations with temporal convolution over the observed history. It follows Chapter 6 and uses no GNNs. The report specifies input dimensions, assumptions, model computations, missing and delayed observations, and remaining uncertainty. Q1 is a design proposal; no training run or implementation is claimed.
 
-Every learned model completed exactly 30 epochs for seeds 0 and 1, using Adam at 1e-3, batch size 32 and final-epoch weights. Training and evaluation used an NVIDIA A100-SXM4-40GB. Timing and environment metadata are recorded in the notebook and JSON exports.
+## Question 2
 
-The final model is symmetrised D. It averages eight complete inverse-transformed forecasts, with no additional training and one shared set of weights. Both seeds of symmetrised B and D are reported in Table 6.
+Model A uses `pixel_unshuffle(4)`, two 64-channel ConvLSTM layers with 3×3 kernels, and a 1×1 readout followed by `pixel_shuffle(4)` and sigmoid. The split is videos 0–7,999 for training, 8,000–8,999 for validation, and 9,000–9,999 for testing.
 
-Figure 3 and Figure 6(a) use mirror videos 9257/9348 and rotation videos 9497/9925. Figure 5 and Figure 6(b) use speed video 9021, whose digits remain separated in every displayed true frame. Cases are fixed across models.
+All learned models use 30 epochs, Adam at 1e-3, batch size 32, seeds 0 and 1, and final-epoch weights. Runs used an NVIDIA A100-SXM4-40GB.
 
-## Reproducing in Colab
+| Model | Change |
+|---|---|
+| A | Baseline trained on 1× motion |
+| B | A with uniform square-symmetry augmentation |
+| C | A with uniformly sampled 1×, 2× and 3× motion |
+| D | C with dilation 2 and padding 2 in the second ConvLSTM layer |
+| Final | Symmetrised D: average eight complete inverse-transformed forecasts |
 
-Runtime files are stored under `MyDrive/DL4STG_PA2`: datasets in `data`, figures/tables in `outputs`, and checkpoints in `training_runs/{model}_seed{seed}`. Large datasets, weights and prediction tensors stay in Drive and are excluded from Git. Completed training calls resume without adding epochs; an unfinished epoch is repeated from its saved starting state.
+A–D each have 480,784 parameters. D increases reach from 8 to 12 original pixels per axis. Symmetrisation shares the same weights and requires no additional training. Tables 1–6 and Figures 1–6 are included in the report, with both symmetrised B and D evaluated in Table 6.
 
-For a full reproduction, follow the notebook stages in order. With completed Drive checkpoints and exports, use these fresh-runtime restore orders:
+### Running the notebook
 
-- Baseline stress tests: sections **1-4, 6-7, 14-15, 24**, then **28-36**.
-- B-D training/evaluation: sections **1-4, 6-7, 14-16, 20, 24, 28-29**, then **37-46**. Section 16 supplies `masked_video_mse`; section 20 supplies checkpoint and RNG helpers.
-- Final evaluation: sections **1-4, 6-7, 14-15, 38**, then **47-53**. Stage 9 includes its own imports, checkpoint loader, group operations and evaluation helpers. It requires no training.
+For a full reproduction, run the notebook stages in order in Colab. Runtime files live under `MyDrive/DL4STG_PA2`: data in `data/`, exports in `outputs/`, and checkpoints in `training_runs/{model}_seed{seed}/`. Datasets, checkpoints and large prediction tensors are excluded from Git.
 
-Section 53 creates `MyDrive/DL4STG_PA2/q2_final_results.zip`. Its report-sized `outputs/` contents are tracked here; the archive and duplicate extraction directory are ignored. GIF paths in the PDF captions resolve to `outputs/gifs/` in this repository.
+With completed Drive checkpoints, the fresh-runtime restore orders are:
 
-## Frozen predictions
+- **Baseline stress tests:** sections 1–4, 6–7, 14–15, 24, then 28–36.
+- **B–D training/evaluation:** sections 1–4, 6–7, 14–16, 20, 24, 28–29, then 37–46. Sections 16 and 20 supply the loss and checkpoint helpers.
+- **Final evaluation:** sections 1–4, 6–7, 14–15, 38, then 47–53. Stage 9 includes its own evaluation helpers and requires no training.
 
-- `predictions/Q2.5.md`: original prediction, committed before baseline stress tests in `31adeaa74eaec058ac1a8b2f945f9e2c0c178ea8`.
-- `DL4STG_PA2_Q2_2-5.ipynb`: preserved executed and answered pre-test notebook.
-- `predictions/Q2.11.md`: original three-sentence prediction, committed before B-D training in `2e5b8f5866a2de7c84ae2ed73e1f58e150513758`.
+Completed training calls resume without adding epochs. Section 53 creates `q2_final_results.zip` in Drive; its report-sized exports are tracked in `outputs/`.
 
-These files remain unchanged. The report includes the repository link on its first page. The repository must be public at submission time.
+### Predictions recorded before testing
+
+- [Q2.5](predictions/Q2.5.md) was committed before baseline stress tests in `31adeaa`. The earlier [answered notebook](DL4STG_PA2_Q2_2-5.ipynb) is retained.
+- [Q2.11](predictions/Q2.11.md) was committed before B–D training in `2e5b8f5`.
+
+Both predictions remain unchanged in the report.
+
+### Figure 3 GIFs
+
+Baseline model A, seed 0. Each animation steps through the five forecast horizons. Cases are the two largest per-video consistency gaps for each transformation.
+
+**Mirror — video 9257**
+
+![Baseline mirror, video 9257](outputs/gifs/figure3a_M_video9257.gif)
+
+**Mirror — video 9348**
+
+![Baseline mirror, video 9348](outputs/gifs/figure3b_M_video9348.gif)
+
+**Rotation — video 9497**
+
+![Baseline rotation, video 9497](outputs/gifs/figure3c_R_video9497.gif)
+
+**Rotation — video 9925**
+
+![Baseline rotation, video 9925](outputs/gifs/figure3d_R_video9925.gif)
+
+### Figure 6 GIFs
+
+Symmetrised D on the same four videos. The transformed-input and transformed-output forecasts agree up to floating-point rounding; agreement does not guarantee accurate forecasts.
+
+**Mirror — video 9257**
+
+![Final model mirror, video 9257](outputs/gifs/figure6a1_M_video9257.gif)
+
+**Mirror — video 9348**
+
+![Final model mirror, video 9348](outputs/gifs/figure6a2_M_video9348.gif)
+
+**Rotation — video 9497**
+
+![Final model rotation, video 9497](outputs/gifs/figure6a3_R_video9497.gif)
+
+**Rotation — video 9925**
+
+![Final model rotation, video 9925](outputs/gifs/figure6a4_R_video9925.gif)
+
+## Compiling the report
+
+With XeLaTeX available, run from the repository root:
+
+```powershell
+cd report
+.\build.ps1
+```
+
+The script compiles twice and updates `output/pdf/DL4STG_PA2_Report.pdf`. On Overleaf, upload the source bundle, select `main.tex` as the main document and XeLaTeX as the compiler. The earlier Q2-only report is retained in `output/pdf/`.

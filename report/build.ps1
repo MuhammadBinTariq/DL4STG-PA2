@@ -8,7 +8,7 @@ try {
         '-no-shell-escape',
         '-interaction=nonstopmode',
         '-halt-on-error',
-        '-jobname=DL4STG_PA2_Q2_Report',
+        '-jobname=DL4STG_PA2_Report',
         "-output-directory=$reportOutputDirectory",
         'main.tex'
     )

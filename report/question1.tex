@@ -1,0 +1,146 @@
+\section*{Question 1 --- River Forecasting Proposal}
+\subsection*{1. Architecture diagram}
+\begin{center}
+\setlength{\fboxsep}{7pt}
+\fbox{\begin{minipage}{0.92\linewidth}\centering
+\textbf{Historical inputs available at issuance $t_0$}\\
+Water levels: S1--S4 and T1 $(B,5,18,3)$\\
+Rainfall: R1 and R2 $(B,2,18,3)$\\
+Reservoir: actual and historical scheduled releases $(B,1,18,6)$\\
+Align to ten-minute intervals; normalize readings; retain masks and ages.
+\end{minipage}}\\[3pt]
+$\downarrow$\\[3pt]
+\fbox{\begin{minipage}{0.92\linewidth}\centering
+\textbf{Project and combine the sources}\\
+Separate linear projections to width 32; stack eight locations.\\
+Add location/type features $(8,6)$ and time-position embeddings.\\
+Hidden tensor: $(B,8,18,32)$.
+\end{minipage}}\\[3pt]
+$\downarrow$\\[3pt]
+\fbox{\begin{minipage}{0.92\linewidth}\centering
+\textbf{Five spatial--temporal blocks}\\
+Spatial attention: $(B\cdot18,8,32)$; mix locations at each time.\\
+Restore axes, then temporal convolution: $(B\cdot8,32,18)$.\\
+Kernel 5, left padding 4; mix past times at each location.\\
+ReLU and residual connections; restore $(B,8,18,32)$.
+\end{minipage}}\\[3pt]
+$\downarrow$\\[3pt]
+\fbox{\begin{minipage}{0.92\linewidth}\centering
+\textbf{Forecast head}\\
+Select latest S1--S4 features: $(B,4,32)$.\\
+Known future release values and masks: $(B,6,2)$\\
+$\rightarrow$ flatten to $(B,12)$ and repeat across four stations.\\
+Concatenate to $(B,4,44)$; shared MLP $44\rightarrow32\rightarrow1$.\\
+\textbf{Water levels at $t_0+60$ minutes: $(B,4)$.}
+\end{minipage}}
+\end{center}
+We use spatial attention and temporal convolution. The locations are irregularly spaced, so we do not treat them as a regular spatial grid. Attention combines their information while preserving a separate representation for each location. Temporal convolution then combines recent observations.
+
+\clearpage
+\subsection*{2. Assumptions}
+The supplied facts are the measured locations, river connections and distances, ten-minute water-level records, timestamped rainfall, and reservoir release records and announcements. T1 lies on a tributary joining between S1 and S2; the unmonitored tributary joins between S2 and S3. Precise travel times and future rainfall are unavailable.
+
+\textbf{A1: History length.} We initially use 18 observations ending at issuance, from $t_0-170$ minutes to $t_0$. This gives a short window of recent conditions without a large model. We would compare longer windows on validation data; we do not assume all relevant travel times fit within this window.
+
+\textbf{A2: Historical coverage.} We assume one to two years of records, including wet and dry periods, can be provided. Repeated seasonal conditions would support training, but the number of independent flood events matters more than the number of overlapping windows. Limited flood coverage would reduce confidence in extreme-event forecasts.
+
+\textbf{A3: Timing and quality.} We assume timestamps, units and station identifiers can be checked, and arrival times or reporting-delay logs can be obtained. We also assume rainfall units permit conversion to ten-minute totals. Invalid readings are marked missing. If historical arrival logs are unavailable, validation would simulate plausible delays and could not fully reproduce past operational conditions.
+
+\textbf{A4: Physical influence.} We expect reservoir releases and upstream conditions to influence downstream levels, with delays that vary by location and river conditions. We do not prescribe exact delays or assume the same delay per station. Locations and river distances identify these differences; the model learns their predictive relationships.
+
+\textbf{A5: Rainfall coverage.} We assume R1 and R2 contain some useful information about recent catchment rainfall. Their coverage of the unmonitored tributary is uncertain. Thus, rainfall is an indirect predictor of its effect, not a measurement of its inflow.
+
+\textbf{A6: Stability between updates.} We assume historical relationships remain useful over the next hour under ordinary conditions. Major channel changes, unusual floods or reservoir operating changes may violate this assumption. These require monitoring and possible retraining.
+
+\subsection*{3. Forecasting task and data specification}
+Every ten minutes, at issuance time $t_0$, we predict water levels at S1--S4 at $t_0+60$ minutes. The horizon is six sampling intervals, but the output contains only the four levels at that final time.
+
+Historical inputs must have both measurement and arrival times no later than $t_0$. Future release inputs use only schedules announced by $t_0$. Historical schedule values retain the versions announced before their effective intervals, so differences from actual releases reflect genuine operational discrepancies. Future rainfall and future measured levels are excluded.
+
+Water levels retain their ten-minute timestamps. Rainfall is accumulated over each preceding ten-minute interval, and releases are averaged over that interval. Different measurement types are normalized using training-set statistics. The location order is $[U,S1,T1,S2,R1,R2,S3,S4]$; this is an indexing convention, not a claim that all locations lie along one river line.
+
+\clearpage
+{\small
+\begin{tabularx}{\textwidth}{@{}p{0.18\linewidth}p{0.19\linewidth}X@{}}
+\toprule
+\textbf{Input/output} & \textbf{Dimensions} & \textbf{Axes, channels and time coverage}\\
+\midrule
+Water-level history & $(B,5,18,3)$ & Batch, locations S1--S4/T1, time, channels. Channels: value, availability mask, age since last available valid reading. Times $t_0-170,\ldots,t_0$ minutes.\\
+Rainfall history & $(B,2,18,3)$ & Batch, gauges R1/R2, time, channels. Same channel meanings; values are preceding ten-minute totals ending at each historical timestamp.\\
+Reservoir history & $(B,1,18,6)$ & Batch, reservoir, time, channels. Separate value/mask/age triplets for actual and historical scheduled releases over the same intervals.\\
+Future releases & $(B,6,2)$ & Batch, six future intervals, channels: scheduled rate and availability mask. Intervals $(t_0+10(h-1),t_0+10h]$, $h=1,\ldots,6$, in minutes; announcements available by $t_0$.\\
+Location features & $(8,6)$ & Location, features: two coordinates, one river-distance coordinate and three type indicators (level, rain, release). Shared across batches and times. Rain gauges use the river coordinate of the nearest mapped main-river point as a location descriptor, not a runoff route.\\
+Time positions & $(18,32)$ & Historical position, learned embedding features. Shared across batches and locations; positions refer only to the observed history.\\
+Forecast/target & $(B,4)$ each & Batch, stations S1--S4. Water levels in metres at $t_0+60$ minutes. Targets are used only for training and evaluation.\\
+\bottomrule
+\end{tabularx}}
+
+Availability is one only for a valid value available at issuance. Ages are scaled and capped; a missing initial history uses the cap. Separate projections accommodate the reservoir's six channels and the other sources' three channels before stacking. Coordinates and distances are scaled. The river-distance coordinate is measured along the mapped network from a fixed reference; T1's coordinate includes its tributary segment. It is a position descriptor, not a measured travel time.
+
+\subsection*{4. Model computations and design justification}
+Let $i$ index locations and $j$ index historical times. Let $x_{i,j}$ contain the source's value, mask and age channels, and let $g_i$ contain its six location features. Using a projection $P_{s(i)}$ for each source type, the initial representation is
+\[
+H^0_{i,j}=P_{s(i)}x_{i,j}+b_{s(i)}+W_g g_i+p_j.
+\]
+Each of five blocks has its own weights. At each fixed time, spatial attention mixes the eight locations:
+\[
+Q_j=H^{\ell-1}_{:,j}W_Q^\ell,\quad
+K_j=H^{\ell-1}_{:,j}W_K^\ell,\quad
+V_j=H^{\ell-1}_{:,j}W_V^\ell,
+\]
+\[
+Z^\ell_{:,j}=H^{\ell-1}_{:,j}
++\operatorname{ReLU}\!\left(\operatorname{softmax}_{\rm row}
+\left(\frac{Q_jK_j^\top}{\sqrt{32}}\right)V_j\right).
+\]
+
+\clearpage
+At each fixed location, a temporal convolution uses the current and four preceding positions:
+\[
+H^\ell_{i,j}=Z^\ell_{i,j}
++\operatorname{ReLU}\!\left(b_T^\ell+
+\sum_{r=0}^{4} A_r^\ell Z^\ell_{i,j-r}\right),
+\qquad \ell=1,\ldots,5.
+\]
+Positions before the window are zero-padded. Temporal weights are shared across locations; spatial weights are shared across times. Five kernel-5 convolutions provide a receptive field of $1+5(5-1)=21$ positions, covering all 18 available observations. This is information access, not a guarantee that the model learns the correct travel delays.
+
+For each target station, concatenate its latest representation with the flattened future schedule and mask, $v\in\mathbb R^{12}$:
+\[
+\widehat y_i=w_2^\top\operatorname{ReLU}
+\left(W_1[H^5_{i,18}\Vert v]+b_1\right)+b_2.
+\]
+The head is shared across the four stations. Their distinct representations allow the same announced release to have different predicted effects. Predictions and targets are in metres. Training minimizes squared error over available target readings:
+\[
+\mathcal L=\frac{\sum_{b,i}a_{b,i}(\widehat y_{b,i}-y_{b,i})^2}
+{\sum_{b,i}a_{b,i}},
+\]
+where $a_{b,i}$ marks a valid target; batches with no valid targets are skipped.
+
+\textbf{Why this combination.} Spatial attention suits irregular locations and allows their contributions to depend on observed conditions. Temporal convolution combines several past lags. Alternating the operations lets later blocks combine information already drawn from both locations and times, while keeping the location axis until the forecast head. These are the spatial attention and temporal convolution operators, combined through block-level factorization.
+
+\textbf{How the sources contribute.} For S1, reservoir history and announced releases provide evidence of incoming changes. For S2, S1 and T1 describe upstream and monitored tributary conditions. For S3, S2 and rainfall provide evidence of upstream changes and possible unmonitored inflows. S4 can combine these with its own and S3's recent levels. All stations can also use other observed locations when these provide useful context.
+
+River connectivity describes expected physical influences; it is not used as an adjacency mask. Attention weights are learned feature weights, not proportions of water. Observed downstream levels may help predict upstream levels through shared conditions without implying upstream water transport. Variable delays may be represented through several temporal lags and condition-dependent features, but are not explicitly measured or guaranteed by this design.
+
+We would split the record chronologically into training, validation and test periods, keeping complete history/target windows within each period. History length and model size would be selected using validation data. Evaluation would report errors at each station and during high-water events, including comparison with holding the latest observed level constant.
+
+\clearpage
+\subsection*{5. Operation and exceptional conditions}
+\textbf{(i) Missing observations.} For water levels and actual releases, use the last available valid value, with mask zero and increasing age. For missing rainfall, use a zero placeholder with mask zero; this does not mean no rain occurred. If no earlier reading exists, use the training mean as a placeholder. Missing historical schedules are also marked explicitly. Training would include simulated gaps and delays. Prolonged outages trigger a degraded-data warning; the authority would set the acceptable age limits before deployment.
+
+\textbf{(ii) Delayed observations.} At $t_0$, only arrived readings enter the historical buffer. Late readings are treated as missing for that issuance. Once received, they update the buffer for the next forecast, without changing what was available to earlier forecasts.
+
+\textbf{(iii) Announced future releases.} For each future interval, use the latest schedule version announced by $t_0$ that covers that interval. Uncovered intervals hold the last available actual release as a fallback, with availability zero. If that is also unavailable, use a training-mean placeholder and flag the missing release information.
+
+\textbf{(iv) Scheduled versus actual releases.} Historical actual and scheduled values remain separate inputs. Their differences may help the model adjust its use of the future schedule. The announced future rate remains a plan, not an observed release; an unexpected override after issuance cannot be known in advance.
+
+\textbf{Operational feasibility.} Each run processes eight locations, 18 historical positions and five small blocks. This is a modest workload for a ten-minute service. End-to-end latency, including data collection, would be checked before deployment; no measured runtime is claimed here.
+
+\subsection*{6. Uncertainty, limitations, and additional information}
+\textbf{Unmonitored inflows and future rain.} Local storms can raise S3/S4 without being captured by R1/R2 or the upstream gauges. Recent rainfall offers indirect evidence, but future rain remains unknown. Forecasts would be refreshed every ten minutes; this reduces the time before new observations are incorporated, but cannot prevent the initial error.
+
+\textbf{Changing travel times and rare events.} Multiple lags may capture changes seen in training. Longer delays, unusual floods and altered channels can still cause mistimed peaks. We would monitor station-level and high-water errors, test longer histories, and retrain when relationships change.
+
+\textbf{Uncertainty reporting.} We would form station-specific empirical intervals from held-out chronological residuals and check their coverage during ordinary and high-water conditions. Nominal 90\% coverage would not be presented as guaranteed during unseen extremes or major outages.
+
+\textbf{Additional information.} A gauge on the unmonitored tributary would provide direct level observations; a rating curve would also be needed to estimate discharge. Catchment boundaries and additional rain gauges would clarify rainfall coverage. Arrival logs and archived release announcements would improve realistic validation. Reservoir levels and gate records would help explain release discrepancies. The system remains usable without these additions, but retains the corresponding inflow, coverage, timing or operational uncertainty. Rainfall nowcasts available at issuance could further help if later supplied; the proposed model does not assume their availability.
